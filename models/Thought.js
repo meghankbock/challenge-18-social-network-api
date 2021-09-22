@@ -3,7 +3,7 @@ const { Schema, model, Types } = require("mongoose");
 const ReactionSchema = new Schema({
   reactionId: {
     type: Schema.Types.ObjectId,
-    default: () => new Types.ObjectId()
+    default: () => new Types.ObjectId(),
   },
 
   reactionBody: {
@@ -23,7 +23,7 @@ const ReactionSchema = new Schema({
     type: Date,
     default: Date.now,
     get: (createdAtVal) => dateFormat(createdAtVal),
-  },
+  }
 });
 
 const ThoughtSchema = new Schema(
