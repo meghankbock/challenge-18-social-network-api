@@ -20,6 +20,7 @@
   "homepage": "https://github.com/meghankbock/challenge-18-social-network-api#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "faker": "^5.5.3",
     "mongoose": "^6.0.7",
     "node": "^16.9.1",
     "validator": "^13.6.0"
