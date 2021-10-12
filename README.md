@@ -22,5 +22,11 @@ This repository contains the backend code for the Social Network Application. Th
 ## GitHub Repository URL
 * https://github.com/meghankbock/challenge-18-social-network-api
 
+## Walkthrough Video URLS
+* User: https://watch.screencastify.com/v/MsjmXmHcvg8FvODtuhuU
+* Friend: https://watch.screencastify.com/v/EnIvu95F7B7B1qH7uK0P
+* Thought: https://watch.screencastify.com/v/RCRicOqlMziGtjK4qwWO
+* Reaction: https://watch.screencastify.com/v/LoELYveOuFVbcaxMsGp3
+
 
 ### created by Meghan Bock
