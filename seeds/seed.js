@@ -1,5 +1,4 @@
 const faker = require("faker");
-const { LEGAL_TCP_SOCKET_OPTIONS } = require("mongodb");
 const mongoose = require("mongoose");
 const { User, Thought } = require("../models");
 
@@ -16,7 +15,7 @@ const createFriendData = async (userData) => {
       const friendResult = await User.findOneAndUpdate(
         { _id: userId },
         { $push: { friends: friendUserId } },
-        { new: true }
+        { new: true, runValidators: true }
       );
     }
   }
@@ -37,8 +36,8 @@ const createThoughtData = async (userData) => {
 
     const thoughtFriendResult = await User.findOneAndUpdate(
       { _id: userId },
-      { $push: { thoughts: _id } },
-      { new: true }
+      { $push: { thoughts: { _id, thoughtText, username } } },
+      { new: true, runValidators: true }
     );
   }
 
@@ -49,7 +48,7 @@ const createThoughtData = async (userData) => {
 };
 
 // create reactions
-const createReactionData = async (userData, createdThoughts) => {
+const createReactionData = async (userData, thoughtData) => {
   const reactionData = [];
   for (let i = 0; i < 100; i += 1) {
     const reactionBody = faker.lorem.sentence();
@@ -57,16 +56,16 @@ const createReactionData = async (userData, createdThoughts) => {
     const randomUserIndex = Math.floor(Math.random() * userData.length);
     const username = userData[randomUserIndex].username;
 
-    const randomThoughtIndex = Math.floor(Math.random() * createdThoughts.length);
-    const thoughtId = createdThoughts[randomThoughtIndex]._id;
+    const randomThoughtIndex = Math.floor(Math.random() * thoughtData.length);
+    const thoughtId = thoughtData[randomThoughtIndex]._id;
     const _id = mongoose.Types.ObjectId();
 
     reactionData.push({ _id, reactionBody, username });
 
     const reactionResult = await Thought.findOneAndUpdate(
       { _id: thoughtId },
-      { $push: { reactions: reactionBody } },
-      { new: true }
+      { $addToSet: { reactions: { _id, reactionBody, username } } },
+      { new: true, runValidators: true }
     );
   }
   if (reactionData) {
@@ -99,16 +98,16 @@ const createSeeds = async () => {
   }
 
   const createdUsers = await User.collection.insertMany(userData);
+
   if (userData.length === 50) {
-    const createdFriends = await createFriendData(userData);
-    if (createdFriends) {
-      const createdThoughts = await createThoughtData(userData);
-      if (createdThoughts) {
-        const createReaction = await createReactionData(
-          userData,
-          createdThoughts
-        );
-        console.log("success");
+    const friendData = await createFriendData(userData);
+    if (friendData) {
+      const thoughtData = await createThoughtData(userData);
+      if (thoughtData) {
+        const reactionData = await createReactionData(userData, thoughtData);
+        if (reactionData) {
+          console.log("success");
+        }
       }
     }
   }
